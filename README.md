@@ -1,6 +1,6 @@
 # 2025_HRR_methods_CCR_HS
 
-'''
+```bash
 # Running GATK Mutect2
 $GATK --java-options "-Xmx6g" Mutect2 \
         -R ${path_to_fasta_file} \
@@ -17,7 +17,6 @@ $GATK --java-options "-Xmx6g" Mutect2 \
 $GATK --java-options "-Xmx6g" LearnReadOrientationModel \
 	 -I ${path_to_output_directory}/${sample_pair_name}.f1r2.tar.gz \
 	 -O ${path_to_output_directory}/${sample_pair_name}.read-orientation-model.tar.gz
-
 
 # Contamination calculation and filtering
 $GATK GetPileupSummaries \
@@ -44,4 +43,4 @@ $GATK FilterMutectCalls \
     --tumor-segmentation ${path_to_output_directory}/${sample_pair_name}_segments.table \
     --stats ${path_to_output_directory}/${sample_pair_name}.mutect2.vcf.gz.stats \
     -O ${path_to_output_directory}/${sample_pair_name}.mutect2.filtered.vcf
-    '''
+```
