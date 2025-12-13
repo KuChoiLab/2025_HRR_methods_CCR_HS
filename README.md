@@ -49,7 +49,7 @@ $GATK FilterMutectCalls \
     -O ${path_to_output_directory}/${sample_pair_name}.mutect2.filtered.vcf
 ```
 
-# Calling copy number variations
+## Calling copy number variations
 
 The following code is used to run FACETS.
 ```bash
@@ -114,7 +114,7 @@ Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${samp
 python FACETS.py
 ```
 
-# Calculating Genomic Instability Score using scarHRD
+## Calculating Genomic Instability Score using scarHRD
 The following code is used to generate scarHRD input file.
 ```bash
 # 1. Script----------
@@ -182,3 +182,99 @@ write.table(seg,
 # 2. Running script----------
 Rscript scarHRD_input.R ${sample_pair_name} ${path_to_FACETS_output_directory}
 ```
+
+The following code is used to run scarHRD.
+
+```bash
+# 1. Script----------
+# script name = scarHRD.R
+#!/usr/bin/Rscript
+
+# Parse command line arguments
+args = commandArgs(TRUE)
+
+# Validate arguments and provide usage information
+if(length(args) < 2) {
+    cat("ERROR: Insufficient arguments provided.\n")
+    cat("Usage: Rscript scarhrd_analysis.R <subset> <directory>\n")
+    cat("  <subset>    - Sample identifier\n")
+    cat("  <directory> - Working directory containing the input file\n")
+    quit(status = 1)
+}
+
+# Assign arguments to variables
+subset = args[1]
+loc = args[2]
+
+# Load required library
+library(scarHRD)
+
+# Set working directory
+setwd(loc)
+
+# Construct input file path
+input_file = file.path(loc, paste0("scarhrd_", subset, "_input.txt"))
+
+# Validate input file existence
+if (!file.exists(input_file)) {
+    cat("ERROR: Input file not found:", input_file, "\n")
+    quit(status = 1)
+}
+
+# Process the data and handle potential NA values
+input_data = read.table(input_file, header=TRUE)
+
+# Remove rows with NA values
+clean_data = na.omit(input_data)
+
+# Create cleaned input file
+clean_file = file.path(loc, paste0("scarhrd_", subset, "_input_clean.txt"))
+write.table(clean_data, 
+            file = clean_file, 
+            quote = FALSE, 
+            sep = "\t", 
+            row.names = FALSE)
+
+# Calculate scarhrd scores
+tryCatch({
+    scores = scar_score(clean_file, 
+                       reference = "grch38", 
+                       seqz = FALSE)
+    
+    # Prepare output data
+    result = data.frame(
+        Sample = subset,
+        HRD = scores[1],
+        Telomeric_AI = scores[2],
+        LST = scores[3],
+        HRD_sum = scores[4]
+    )
+    
+    # Write results to file
+    output_file = paste0("scarhrd_scores_", subset, ".txt")
+    write.table(result, 
+                file = output_file, 
+                quote = FALSE, 
+                sep = "\t", 
+                row.names = FALSE)
+    
+    # Print results to console
+    cat("\nAnalysis completed successfully for sample:", subset, "\n")
+    cat("Results saved to:", output_file, "\n")
+    cat("\nScores:\n")
+    cat("HRD Score:", scores[1], "\n")
+    cat("Telomeric AI:", scores[2], "\n")
+    cat("LST Score:", scores[3], "\n")
+    cat("HRD Sum:", scores[4], "\n")
+    
+}, error = function(e) {
+    cat("ERROR: Failed to calculate scarhrd scores:", e$message, "\n")
+    quit(status = 1)
+})
+
+# 2. Running scarHRD----------
+Rscript scarHRD.R ${sample_pair_name} ${path_to_scarHRD_input_directory}
+
+```
+
+## Reference
