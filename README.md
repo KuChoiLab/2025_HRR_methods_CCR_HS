@@ -113,3 +113,72 @@ Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${samp
 # 3. Running FACETS----------
 python FACETS.py
 ```
+
+# Calculating Genomic Instability Score using scarHRD
+The following code is used to generate scarHRD input file.
+```bash
+# 1. Script----------
+# script name = scarHRD_input.R
+
+#!/usr/bin/Rscript
+
+# Parse command line arguments
+args = commandArgs(TRUE)
+
+# Validate arguments and provide usage information
+if(length(args) < 2) {
+    cat("ERROR: Insufficient arguments provided.\n")
+    cat("Usage: Rscript facets_analysis.R <subset> <directory>\n")
+    cat("  <subset>    - Sample identifier\n")
+    cat("  <directory> - Working directory containing the input file\n")
+    quit(status = 1)
+}
+
+# Assign arguments to variables
+subset = args[1]
+loc = args[2]
+
+# Load required libraries
+library("facets")
+library("data.table")
+
+# Set working directory and construct input file path
+setwd(loc)
+datafile = file.path(loc, paste0(subset, ".csv.gz"))
+
+# Validate input file existence
+if (!file.exists(datafile)) {
+    cat("ERROR: Input file not found:", datafile, "\n")
+    quit(status = 1)
+}
+
+# Process the sample data
+rcmat = readSnpMatrix(datafile)
+xx = preProcSample(rcmat)
+oo = procSample(xx, cval=150)
+fit = emcncf(oo)
+
+# Prepare scarHRD input data
+seg <- data.frame(SampleID = subset,
+                 Chromosome = fit$cncf$chrom,
+                 Start_position = fit$cncf$start,
+                 End_position = fit$cncf$end,
+                 total_cn = fit$cncf$tcn.em,
+                 A_cn = fit$cncf$tcn.em - fit$cncf$lcn.em,
+                 B_cn = fit$cncf$lcn.em,
+                 ploidy = fit$ploidy)
+
+# Remove sex chromosomes and format chromosome names
+seg <- seg[which(seg$Chromosome != 23), ]
+seg$Chromosome <- paste0("chr", as.character(seg$Chromosome))
+
+# Write scarHRD input file
+write.table(seg,
+            file = paste0("scarhrd_", subset, "_input.txt"),
+            row.names = FALSE,
+            sep = "\t",
+            quote = FALSE)
+            
+# 2. Running script----------
+Rscript scarHRD_input.R ${sample_pair_name} ${path_to_FACETS_output_directory}
+```
