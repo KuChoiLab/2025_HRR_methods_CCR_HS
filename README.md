@@ -1,5 +1,9 @@
 # 2025_HRR_methods_CCR_HS
 
+# Calling somatic variants
+
+The following code is used to run GATK Mutect2.
+
 ```bash
 # Running GATK Mutect2
 $GATK --java-options "-Xmx6g" Mutect2 \
