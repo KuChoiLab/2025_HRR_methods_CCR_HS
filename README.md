@@ -277,4 +277,23 @@ Rscript scarHRD.R ${sample_pair_name} ${path_to_scarHRD_input_directory}
 
 ```
 
+## Identifying Mutational Signatures
+
+The following code is used to run SigProfilerAssignment.
+
+```bash
+# Analysis environment setup
+conda create --name sigprofiler -y
+conda activate sigprofiler
+conda install python=3.10 r-base r-devtools r-reticulate -c conda-forge -y
+pip install SigProfilerMatrixGenerator numpy==1.23.5
+pip install SigProfilerAssignment
+pip install SigProfilerPlotting
+
+# Running SigProfilerAssignment
+conda activate sigprofiler
+python
+Analyze.cosmic_fit(samples=${path_to_vcf_directory}, output=${path_to_output_directory}, input_type="vcf", context_type="96", genome_build="GRCh38", cosmic_version=3.4)
+```
+
 ## Reference
