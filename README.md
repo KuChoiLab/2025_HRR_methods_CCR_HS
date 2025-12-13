@@ -52,14 +52,9 @@ $GATK FilterMutectCalls \
 # Calling copy number variations
 
 The following code is used to run FACETS.
-
 ```bash
 # 1. Script----------
 # script name = FACETS.py
-# Set the path
-SAMPLES_FILE="samples.txt" # input file
-FACETS_DIR="path to FACETS" 
-OUTPUT_DIR="Path to save the results" 
 
 # Read sample information
 try:
@@ -97,23 +92,23 @@ except IOError:
 sys.stdout.write("EOF\n")
 
 # Run FACETS
-mkdir -p ${OUTPUT_DIR}/${PAIR}/facets
+mkdir -p ${path_to_output_directory}/${sample_pair_name}/facets
 
 module load HTSlib/1.21-GCC-12.2.0
-${FACETS_DIR}/inst/extcode/snp-pileup \
+${path to FACETS}/inst/extcode/snp-pileup \
 -g -q15 -Q20 -P100 -r25,0 \
-${FACETS_DIR}/inst/extdata/common_all_20180418.vcf.gz \
-${OUTPUT_DIR}/${PAIR}/facets/${PAIR}.csv.gz \
-${normal}/${normal}.bam \
-${tumor}/${tumor}.bam
+${path to FACETS}/inst/extdata/common_all_20180418.vcf.gz \
+${path_to_output_directory}/${sample_pair_name}/facets/${sample_pair_name}.csv.gz \
+${path_to_normal_bam} \
+${path_to_tumor_bam}
 
 module load R/4.2.0-foss-2020b
-Rscript ${FACETS_DIR}/bin/cnv_facets.R -p ${OUTPUT_DIR}/${PAIR}/facets/${PAIR}.csv.gz -o "${OUTPUT_DIR}/${PAIR}/facets/${PAIR}_cnv_facets"
+Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${sample_pair_name}/facets/${sample_pair_name}.csv.gz -o "${path_to_output_directory}/${sample_pair_name}/facets/${sample_pair_name}_cnv_facets"
 
 # 2. Example of input file----------
 # input file name = samples.txt
-[tumor_sample_dir_name] [pair_dir_name] [T(tumor)/N(normal)]
-[normal_sample_dir_name] [pair_dir_name] [T(tumor)/N(normal)]
+[tumor_sample_dir_name] [sample_pair_name] [T(tumor)/N(normal)]
+[normal_sample_dir_name] [sample_pair_name] [T(tumor)/N(normal)]
 
 # 3. Running FACETS----------
 python FACETS.py
