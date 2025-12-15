@@ -223,15 +223,6 @@ The following code is used to run scarHRD.
 # Parse command line arguments
 args = commandArgs(TRUE)
 
-# Validate arguments and provide usage information
-if(length(args) < 2) {
-    cat("ERROR: Insufficient arguments provided.\n")
-    cat("Usage: Rscript scarhrd_analysis.R <subset> <directory>\n")
-    cat("  <subset>    - Sample identifier\n")
-    cat("  <directory> - Working directory containing the input file\n")
-    quit(status = 1)
-}
-
 # Assign arguments to variables
 subset = args[1]
 loc = args[2]
@@ -244,12 +235,6 @@ setwd(loc)
 
 # Construct input file path
 input_file = file.path(loc, paste0("scarhrd_", subset, "_input.txt"))
-
-# Validate input file existence
-if (!file.exists(input_file)) {
-    cat("ERROR: Input file not found:", input_file, "\n")
-    quit(status = 1)
-}
 
 # Process the data and handle potential NA values
 input_data = read.table(input_file, header=TRUE)
@@ -287,20 +272,6 @@ tryCatch({
                 quote = FALSE, 
                 sep = "\t", 
                 row.names = FALSE)
-    
-    # Print results to console
-    cat("\nAnalysis completed successfully for sample:", subset, "\n")
-    cat("Results saved to:", output_file, "\n")
-    cat("\nScores:\n")
-    cat("HRD Score:", scores[1], "\n")
-    cat("Telomeric AI:", scores[2], "\n")
-    cat("LST Score:", scores[3], "\n")
-    cat("HRD Sum:", scores[4], "\n")
-    
-}, error = function(e) {
-    cat("ERROR: Failed to calculate scarhrd scores:", e$message, "\n")
-    quit(status = 1)
-})
 
 # 2. Running scarHRD----------
 Rscript scarHRD.R ${sample_pair_name} ${path_to_scarHRD_input_directory}
