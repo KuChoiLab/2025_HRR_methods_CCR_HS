@@ -1,5 +1,11 @@
 # 2025_HRR_methods_CCR_HS
 
+Tumor samples were classified as homologous recombination (HR)-deficient if they met at least one of the following criteria:
+	(1) Genomic Instability Score (GIS) ≥ 42,
+	(2) Presence of a pathogenic or likely pathogenic somatic or germline mutation in BRCA1 or BRCA2.
+
+Samples that did not meet either of these criteria were classified as HR-proficient.
+
 ## Calling somatic variants
 
 The following code is used to run GATK Mutect2.
