@@ -49,6 +49,26 @@ $GATK FilterMutectCalls \
     -O ${path_to_output_directory}/${sample_pair_name}.mutect2.filtered.vcf
 ```
 
+The following code is used to run Manta and Strelka2.
+
+```bash
+# Running Manta
+python2 ${path_to_Manta}/configManta.py \
+--normalBam ${path_to_normal_bam} \
+--tumorBam ${path_to_tumor_bam} \ 
+--referenceFasta ${path_to_fasta_file} \
+--runDir ${path_to_output_directory} \
+
+# Running Strelka2
+python2 ${path_to_Strelka}/configureStrelkaSomaticWorkflow.py \
+--normalBam ${path_to_normal_bam} \
+--tumorBam ${path_to_tumor_bam} \
+--ref ${path_to_fasta_file} \
+--indelCandidates ${path_to_Manta_output_directory}/candidateSmallIndels.vcf.gz \
+--runDir ${path_to_output_directory}
+
+```
+
 ## Calling copy number variations
 
 The following code is used to run FACETS.
