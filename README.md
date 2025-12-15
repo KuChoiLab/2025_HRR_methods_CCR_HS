@@ -155,15 +155,6 @@ The following code is used to generate scarHRD input file.
 # Parse command line arguments
 args = commandArgs(TRUE)
 
-# Validate arguments and provide usage information
-if(length(args) < 2) {
-    cat("ERROR: Insufficient arguments provided.\n")
-    cat("Usage: Rscript facets_analysis.R <subset> <directory>\n")
-    cat("  <subset>    - Sample identifier\n")
-    cat("  <directory> - Working directory containing the input file\n")
-    quit(status = 1)
-}
-
 # Assign arguments to variables
 subset = args[1]
 loc = args[2]
@@ -175,12 +166,6 @@ library("data.table")
 # Set working directory and construct input file path
 setwd(loc)
 datafile = file.path(loc, paste0(subset, ".csv.gz"))
-
-# Validate input file existence
-if (!file.exists(datafile)) {
-    cat("ERROR: Input file not found:", datafile, "\n")
-    quit(status = 1)
-}
 
 # Process the sample data
 rcmat = readSnpMatrix(datafile)
