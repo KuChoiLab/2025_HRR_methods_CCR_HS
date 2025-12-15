@@ -151,7 +151,6 @@ The following code is used to generate scarHRD input file.
 # script name = scarHRD_input.R
 
 #!/usr/bin/Rscript
-
 # Parse command line arguments
 args = commandArgs(TRUE)
 
@@ -163,9 +162,8 @@ loc = args[2]
 library("facets")
 library("data.table")
 
-# Set working directory and construct input file path
-setwd(loc)
-datafile = file.path(loc, paste0(subset, ".csv.gz"))
+# Load FACETS output file
+datafile = file.path(${path_to_FACETS_output_directory})
 
 # Process the sample data
 rcmat = readSnpMatrix(datafile)
@@ -183,13 +181,9 @@ seg <- data.frame(SampleID = subset,
                  B_cn = fit$cncf$lcn.em,
                  ploidy = fit$ploidy)
 
-# Remove sex chromosomes and format chromosome names
-seg <- seg[which(seg$Chromosome != 23), ]
-seg$Chromosome <- paste0("chr", as.character(seg$Chromosome))
-
 # Write scarHRD input file
 write.table(seg,
-            file = paste0("scarhrd_", subset, "_input.txt"),
+            file = output_file,
             row.names = FALSE,
             sep = "\t",
             quote = FALSE)
@@ -203,8 +197,8 @@ The following code is used to run scarHRD.
 ```bash
 # 1. Script----------
 # script name = scarHRD.R
-#!/usr/bin/Rscript
 
+#!/usr/bin/Rscript
 # Parse command line arguments
 args = commandArgs(TRUE)
 
@@ -215,14 +209,8 @@ loc = args[2]
 # Load required library
 library(scarHRD)
 
-# Set working directory
-setwd(loc)
-
-# Construct input file path
-input_file = file.path(loc, paste0("scarhrd_", subset, "_input.txt"))
-
 # Process the data and handle potential NA values
-input_data = read.table(input_file, header=TRUE)
+input_data = read.table(${path_to_scarHRD_input_file}, header=TRUE)
 
 # Calculate scarhrd scores
 tryCatch({
@@ -240,7 +228,6 @@ tryCatch({
     )
     
     # Write results to file
-    output_file = paste0("scarhrd_scores_", subset, ".txt")
     write.table(result, 
                 file = output_file, 
                 quote = FALSE, 
