@@ -91,52 +91,48 @@ The following code is used to run FACETS.
 
 # Read sample information
 try:
-   fp = open(sys.argv[argn])
-   for line in fp.readlines():
-      line = line.strip()
-      if len(line) == 0:
-         continue
-      fields = line.split(" ")
-      if len(fields) != 3:
-         sys.stderr.write("Error:  samples.txt lines must contain 3 columns, Sample, Pairname, Type:  %s\n" % line)
-         sys.exit(-1)
+    fp = open(sys.argv[argn])
+    for line in fp.readlines():
+        line = line.strip()
+        if len(line) == 0:
+            continue
 
-      samples.append(fields[0])
+        fields = line.split(" ")
+        if len(fields) != 3:
+            continue
 
-      type = fields[2].lower()
-      if type != 't' and type != 'n':
-         sys.stderr.write("Error:  samples.txt type value must be 't' or 'n':  %s\n" % line)
-         sys.exit(-1)
+        samples.append(fields[0])
 
-      sys.stdout.write("%s %s %s\n" % (fields[0], fields[1], type))
+        type = fields[2].lower()
+        if type != 't' and type != 'n':
+            continue
 
-      if fields[1] not in pairs:
-          pairs[fields[1]] = type
-          pairsamples[fields[1]] = [ fields[0] ]
-      else:
-          pairs[fields[1]] += type
-          pairsamples[fields[1]].append(fields[0])
-      
-   fp.close()
+        sys.stdout.write("%s %s %s\n" % (fields[0], fields[1], type))
+
+        if fields[1] not in pairs:
+            pairs[fields[1]] = type
+            pairsamples[fields[1]] = [fields[0]]
+        else:
+            pairs[fields[1]] += type
+            pairsamples[fields[1]].append(fields[0])
+
+    fp.close()
 except IOError:
-   sys.stderr.write("Error:  Unable to read samples.txt file:  %s\n" % sys.argv[argn])
-   sys.exit(-1)
+    pass
 
 sys.stdout.write("EOF\n")
 
 # Run FACETS
-mkdir -p ${path_to_output_directory}/${sample_pair_name}/facets
-
 module load HTSlib/1.21-GCC-12.2.0
 ${path to FACETS}/inst/extcode/snp-pileup \
 -g -q15 -Q20 -P100 -r25,0 \
 ${path to FACETS}/inst/extdata/common_all_20180418.vcf.gz \
-${path_to_output_directory}/${sample_pair_name}/facets/${sample_pair_name}.csv.gz \
+${path_to_output_directory}/${sample_pair_name}.csv.gz \
 ${path_to_normal_bam} \
 ${path_to_tumor_bam}
 
 module load R/4.2.0-foss-2020b
-Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${sample_pair_name}/facets/${sample_pair_name}.csv.gz -o "${path_to_output_directory}/${sample_pair_name}/facets/${sample_pair_name}_cnv_facets"
+Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${sample_pair_name}.csv.gz -o "${path_to_output_directory}/${sample_pair_name}_cnv_facets"
 
 # 2. Example of input file----------
 # input file name = samples.txt
@@ -146,6 +142,7 @@ Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${samp
 # 3. Running FACETS----------
 python FACETS.py
 ```
+
 
 ## Calculating Genomic Instability Score using scarHRD
 The following code is used to generate scarHRD input file.
