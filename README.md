@@ -120,13 +120,11 @@ try:
 sys.stdout.write("EOF\n")
 
 # Run FACETS
-module load HTSlib/1.21-GCC-12.2.0
 ${path to FACETS}/inst/extcode/snp-pileup \
 ${path_to_output_directory}/${sample_pair_name}.csv.gz \
 ${path_to_normal_bam} \
 ${path_to_tumor_bam}
 
-module load R/4.2.0-foss-2020b
 Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${sample_pair_name}.csv.gz -o "${path_to_output_directory}/${sample_pair_name}_cnv_facets"
 
 # 2. Example of input file----------
