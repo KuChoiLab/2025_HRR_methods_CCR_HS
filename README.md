@@ -144,7 +144,7 @@ python FACETS.py
 ```
 
 
-## Calculating Genomic Instability Score using scarHRD
+## Calculating GIS using scarHRD
 The following code is used to generate scarHRD input file.
 ```bash
 # 1. Script----------
