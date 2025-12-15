@@ -239,20 +239,9 @@ input_file = file.path(loc, paste0("scarhrd_", subset, "_input.txt"))
 # Process the data and handle potential NA values
 input_data = read.table(input_file, header=TRUE)
 
-# Remove rows with NA values
-clean_data = na.omit(input_data)
-
-# Create cleaned input file
-clean_file = file.path(loc, paste0("scarhrd_", subset, "_input_clean.txt"))
-write.table(clean_data, 
-            file = clean_file, 
-            quote = FALSE, 
-            sep = "\t", 
-            row.names = FALSE)
-
 # Calculate scarhrd scores
 tryCatch({
-    scores = scar_score(clean_file, 
+    scores = scar_score(input_data, 
                        reference = "grch38", 
                        seqz = FALSE)
     
