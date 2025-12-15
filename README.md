@@ -1,10 +1,9 @@
 # 2025_HRR_methods_CCR_HS
 
 Tumor samples were classified as homologous recombination (HR)-deficient if they met at least one of the following criteria:
-	1. Genomic Instability Score (GIS) ≥ 42
 
-	(1) Genomic Instability Score (GIS) ≥ 42,
-	(2) Presence of a pathogenic or likely pathogenic somatic or germline mutation in BRCA1 or BRCA2.
+1. Genomic Instability Score (GIS) ≥ 42
+2. Presence of a pathogenic or likely pathogenic somatic or germline mutation in BRCA1 or BRCA2
 
 Samples that did not meet either of these criteria were classified as HR-proficient.
 
@@ -149,22 +148,16 @@ python FACETS.py
 The following code is used to generate scarHRD input file.
 ```bash
 # 1. Script----------
-# script name = scarHRD_input.R
+# script name = scarHRD.R
 
 #!/usr/bin/Rscript
-# Parse command line arguments
-args = commandArgs(TRUE)
-
-# Assign arguments to variables
-subset = args[1]
-loc = args[2]
-
 # Load required libraries
 library("facets")
+library("scarHRD")
 library("data.table")
 
 # Load FACETS output file
-datafile = file.path(${path_to_FACETS_output_directory})
+datafile = file.path(${path_to_FACETS_output_file})
 
 # Process the sample data
 rcmat = readSnpMatrix(datafile)
@@ -173,7 +166,7 @@ oo = procSample(xx, cval=150)
 fit = emcncf(oo)
 
 # Prepare scarHRD input data
-seg <- data.frame(SampleID = subset,
+input_data <- data.frame(SampleID = ${sample_name},
                  Chromosome = fit$cncf$chrom,
                  Start_position = fit$cncf$start,
                  End_position = fit$cncf$end,
@@ -181,37 +174,6 @@ seg <- data.frame(SampleID = subset,
                  A_cn = fit$cncf$tcn.em - fit$cncf$lcn.em,
                  B_cn = fit$cncf$lcn.em,
                  ploidy = fit$ploidy)
-
-# Write scarHRD input file
-write.table(seg,
-            file = output_file,
-            row.names = FALSE,
-            sep = "\t",
-            quote = FALSE)
-            
-# 2. Running script----------
-Rscript scarHRD_input.R ${sample_pair_name} ${path_to_FACETS_output_directory}
-```
-
-The following code is used to run scarHRD.
-
-```bash
-# 1. Script----------
-# script name = scarHRD.R
-
-#!/usr/bin/Rscript
-# Parse command line arguments
-args = commandArgs(TRUE)
-
-# Assign arguments to variables
-subset = args[1]
-loc = args[2]
-
-# Load required library
-library(scarHRD)
-
-# Process the data and handle potential NA values
-input_data = read.table(${path_to_scarHRD_input_file}, header=TRUE)
 
 # Calculate scarhrd scores
 tryCatch({
@@ -221,7 +183,7 @@ tryCatch({
     
 # Prepare output data
     result = data.frame(
-        Sample = subset,
+        Sample = ${sample_name},
         HRD = scores[1],
         Telomeric_AI = scores[2],
         LST = scores[3],
@@ -236,7 +198,7 @@ tryCatch({
                 row.names = FALSE)
 
 # 2. Running scarHRD----------
-Rscript scarHRD.R ${sample_pair_name} ${path_to_scarHRD_input_directory}
+Rscript scarHRD.R ${sample_pair_name}
 
 ```
 
