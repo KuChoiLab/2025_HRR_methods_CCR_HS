@@ -198,7 +198,7 @@ tryCatch({
                 row.names = FALSE)
 
 # 2. Running scarHRD----------
-Rscript scarHRD.R ${sample_pair_name}
+Rscript scarHRD.R ${sample_name}
 
 ```
 
