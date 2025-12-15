@@ -218,7 +218,7 @@ tryCatch({
                        reference = "grch38", 
                        seqz = FALSE)
     
-    # Prepare output data
+# Prepare output data
     result = data.frame(
         Sample = subset,
         HRD = scores[1],
@@ -227,7 +227,7 @@ tryCatch({
         HRD_sum = scores[4]
     )
     
-    # Write results to file
+# Write results to file
     write.table(result, 
                 file = output_file, 
                 quote = FALSE, 
