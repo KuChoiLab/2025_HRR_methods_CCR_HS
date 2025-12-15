@@ -1,7 +1,6 @@
 # 2025_HRR_methods_CCR_HS
 
 Tumor samples were classified as homologous recombination (HR)-deficient if they met at least one of the following criteria:
-
 	1. Genomic Instability Score (GIS) ≥ 42
 
 	(1) Genomic Instability Score (GIS) ≥ 42,
