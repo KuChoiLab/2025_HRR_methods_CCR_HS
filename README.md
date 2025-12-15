@@ -117,16 +117,11 @@ try:
             pairsamples[fields[1]].append(fields[0])
 
     fp.close()
-except IOError:
-    pass
-
 sys.stdout.write("EOF\n")
 
 # Run FACETS
 module load HTSlib/1.21-GCC-12.2.0
 ${path to FACETS}/inst/extcode/snp-pileup \
--g -q15 -Q20 -P100 -r25,0 \
-${path to FACETS}/inst/extdata/common_all_20180418.vcf.gz \
 ${path_to_output_directory}/${sample_pair_name}.csv.gz \
 ${path_to_normal_bam} \
 ${path_to_tumor_bam}
