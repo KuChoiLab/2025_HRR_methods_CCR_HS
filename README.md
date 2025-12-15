@@ -69,6 +69,19 @@ python2 ${path_to_Strelka}/configureStrelkaSomaticWorkflow.py \
 
 ```
 
+## Calling germline variants
+
+The following code is used to run GATK HaplotypeCaller.
+
+```bash
+gatk HaplotypeCaller \
+   -R ${path_to_fasta_file} \
+   -I ${path_to_normal_bam} \
+   -O ${path_to_output_directory}/${sample_name}.g.vcf.gz \
+   -ERC GVCF \
+   -L ${path_to_bed_file}
+```
+
 ## Calling copy number variations
 
 The following code is used to run FACETS.
