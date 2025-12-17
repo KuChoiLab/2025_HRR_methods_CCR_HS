@@ -93,113 +93,19 @@ gatk HaplotypeCaller \
 
 The following code is used to run FACETS.
 ```bash
-# 1. Script----------
-# script name = FACETS.py
-
-# Read sample information
-try:
-    fp = open(sys.argv[argn])
-    for line in fp.readlines():
-        line = line.strip()
-        if len(line) == 0:
-            continue
-
-        fields = line.split(" ")
-        if len(fields) != 3:
-            continue
-
-        samples.append(fields[0])
-
-        type = fields[2].lower()
-        if type != 't' and type != 'n':
-            continue
-
-        sys.stdout.write("%s %s %s\n" % (fields[0], fields[1], type))
-
-        if fields[1] not in pairs:
-            pairs[fields[1]] = type
-            pairsamples[fields[1]] = [fields[0]]
-        else:
-            pairs[fields[1]] += type
-            pairsamples[fields[1]].append(fields[0])
-
-    fp.close()
-sys.stdout.write("EOF\n")
-
-# Run FACETS
 ${path to FACETS}/inst/extcode/snp-pileup \
 ${path_to_output_directory}/${sample_pair_name}.csv.gz \
 ${path_to_normal_bam} \
 ${path_to_tumor_bam}
 
 Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${sample_pair_name}.csv.gz -o "${path_to_output_directory}/${sample_pair_name}_cnv_facets"
-
-# 2. Example of input file----------
-# input file name = samples.txt
-[tumor_sample_dir_name] [sample_pair_name] [T(tumor)/N(normal)]
-[normal_sample_dir_name] [sample_pair_name] [T(tumor)/N(normal)]
-
-# 3. Running FACETS----------
-python FACETS.py
 ```
 
 
 ## Calculating GIS using scarHRD
 The following code is used to generate scarHRD input file.
 ```bash
-# 1. Script----------
-# script name = scarHRD.R
-
-#!/usr/bin/Rscript
-# Load required libraries
-library("facets")
-library("scarHRD")
-library("data.table")
-
-# Load FACETS output file
-datafile = file.path(${path_to_FACETS_output_file})
-
-# Process the sample data
-rcmat = readSnpMatrix(datafile)
-xx = preProcSample(rcmat)
-oo = procSample(xx, cval=150)
-fit = emcncf(oo)
-
-# Prepare scarHRD input data
-input_data <- data.frame(SampleID = ${sample_name},
-                 Chromosome = fit$cncf$chrom,
-                 Start_position = fit$cncf$start,
-                 End_position = fit$cncf$end,
-                 total_cn = fit$cncf$tcn.em,
-                 A_cn = fit$cncf$tcn.em - fit$cncf$lcn.em,
-                 B_cn = fit$cncf$lcn.em,
-                 ploidy = fit$ploidy)
-
-# Calculate scarhrd scores
-tryCatch({
-    scores = scar_score(input_data, 
-                       reference = "grch38", 
-                       seqz = FALSE)
-    
-# Prepare output data
-    result = data.frame(
-        Sample = ${sample_name},
-        HRD = scores[1],
-        Telomeric_AI = scores[2],
-        LST = scores[3],
-        HRD_sum = scores[4]
-    )
-    
-# Write results to file
-    write.table(result, 
-                file = output_file, 
-                quote = FALSE, 
-                sep = "\t", 
-                row.names = FALSE)
-
-# 2. Running scarHRD----------
-Rscript scarHRD.R ${sample_name}
-
+scores <- scarHRD::scar_score(input_data)
 ```
 
 ## Identifying Mutational Signatures
