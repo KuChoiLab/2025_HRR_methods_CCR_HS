@@ -24,6 +24,7 @@ gatk Mutect2 \
         -tumor ${tumor_sample_name} \
         -normal ${normal_sample_name} \
         --panel-of-normals ${path_to_PON_file} \
+        # Example of a panel of normals (PON) file: 1000g_pon.hg38.vcf.gz
         --f1r2-tar-gz ${path_to_output_directory}/${sample_pair_name}.f1r2.tar.gz \
         -O ${path_to_output_directory}/${sample_pair_name}.mutect2.vcf \
         -bamout ${path_to_output_directory}/${sample_pair_name}.mutect2.bam
