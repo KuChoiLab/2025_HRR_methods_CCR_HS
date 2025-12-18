@@ -61,6 +61,9 @@ gatk FilterMutectCalls \
 The following code is used to run Manta and Strelka2.
 
 ```bash
+# Manta version : 1.6.0
+# Sterlka2 version : 2.9.10
+
 # Running Manta
 python2 ${path_to_Manta}/configManta.py \
 --normalBam ${path_to_normal_bam} \
@@ -75,7 +78,6 @@ python2 ${path_to_Strelka}/configureStrelkaSomaticWorkflow.py \
 --ref ${path_to_fasta_file} \
 --indelCandidates ${path_to_Manta_output_directory}/candidateSmallIndels.vcf.gz \
 --runDir ${path_to_output_directory}
-
 ```
 
 ## Calling germline variants
