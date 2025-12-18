@@ -7,7 +7,8 @@ Tumor samples were classified as homologous recombination (HR)-deficient if they
 
 Samples that did not meet either of these criteria were classified as HR-proficient.
 
-## Calling somatic variants
+## Variant calling
+### 1. Detection of somatic SNVs and INDELs
 
 The following code is used to run GATK Mutect2.
 
@@ -80,7 +81,7 @@ python2 ${path_to_Strelka}/configureStrelkaSomaticWorkflow.py \
 --runDir ${path_to_output_directory}
 ```
 
-## Calling germline variants
+### 2. Detection of germline SNVs and INDELs
 
 The following code is used to run GATK HaplotypeCaller.
 
@@ -93,8 +94,7 @@ gatk HaplotypeCaller \
    -L ${path_to_bed_file}
 ```
 
-## Calling copy number variations
-
+### 3. Detection of somatic CNVs
 The following code is used to run FACETS.
 ```bash
 # FACETS version : 0.6.2
@@ -108,9 +108,10 @@ ${path_to_tumor_bam}
 Rscript facets/bin/cnv_facets.R -p ${path_to_output_directory}/${sample_pair_name}.csv.gz -o "${path_to_output_directory}/${output_file}"
 ```
 
+## Downstream analyses for HRD determination
 
-## Calculating GIS using scarHRD
-The following code is used to generate scarHRD input file.
+### 1. Calculating GIS
+The following code is used to run scarHRD.
 ```bash
 # R environment
 # scarHRD version : 0.1.1
@@ -119,8 +120,7 @@ library(scarHRD)
 scores <- scarHRD::scar_score(input_data)
 ```
 
-## Identifying Mutational Signatures
-
+### 2. Identifying Mutational Signatures
 The following code is used to run SigProfilerAssignment.
 ```bash
 # SigProfilerAssignment version : 0.1.9
