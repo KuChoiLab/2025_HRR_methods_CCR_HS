@@ -13,7 +13,7 @@ The following code is used to run GATK Mutect2.
 
 ```bash
 # Running GATK Mutect2
-$GATK --java-options "-Xmx6g" Mutect2 \
+gatk Mutect2 \
         -R ${path_to_fasta_file} \
         -I ${path_to_tumor_bam} \
         -I ${path_to_normal_bam} \
@@ -25,28 +25,28 @@ $GATK --java-options "-Xmx6g" Mutect2 \
         -bamout ${path_to_output_directory}/${sample_pair_name}.mutect2.bam
 
 # Running GATK LearnReadOrientationModel
-$GATK --java-options "-Xmx6g" LearnReadOrientationModel \
+gatk LearnReadOrientationModel \
 	 -I ${path_to_output_directory}/${sample_pair_name}.f1r2.tar.gz \
 	 -O ${path_to_output_directory}/${sample_pair_name}.read-orientation-model.tar.gz
 
 # Contamination calculation and filtering
-$GATK GetPileupSummaries \
+gatk GetPileupSummaries \
     -R ${path_to_fasta_file} \
     -I ${path_to_tumor_bam} \
     -O ${path_to_output_directory}/${tumor_sample_name}_getpileupsummaries.table
 
-$GATK GetPileupSummaries \
+gatk GetPileupSummaries \
     -R ${path_to_fasta_file} \
     -I ${path_to_normal_bam} \
     -O ${path_to_output_directory}/${normal_sample_name}_getpileupsummaries.table
 
-$GATK CalculateContamination \
+gatk CalculateContamination \
     -I ${path_to_output_directory}/${tumor_sample_name}_getpileupsummaries.table \
     -matched ${path_to_output_directory}/${normal_sample_name}_getpileupsummaries.table \
     -O ${path_to_output_directory}/${sample_pair_name}_calculatecontamination.table \
     -tumor-segmentation ${path_to_output_directory}/${sample_pair_name}_segments.table
 
-$GATK FilterMutectCalls \
+gatk FilterMutectCalls \
     -V ${path_to_output_directory}/${sample_pair_name}.mutect2.vcf.gz \
     -R ${path_to_fasta_file} \
     --ob-priors ${path_to_output_directory}/${sample_pair_name}.read-orientation-model.tar.gz \
