@@ -122,20 +122,18 @@ scores <- scarHRD::scar_score(input_data)
 ## Identifying Mutational Signatures
 
 The following code is used to run SigProfilerAssignment.
-
 ```bash
-# Analysis environment setup----------
-conda create --name sigprofiler -y
-conda activate sigprofiler
-conda install python=3.10 r-base r-devtools r-reticulate -c conda-forge -y
-pip install SigProfilerMatrixGenerator numpy==1.23.5
-pip install SigProfilerAssignment
-pip install SigProfilerPlotting
+# SigProfilerAssignment version : 0.1.9
 
-# Running SigProfilerAssignment----------
-conda activate sigprofiler
-python
-Analyze.cosmic_fit(samples=${path_to_vcf_directory}, output=${path_to_output_directory}, input_type="vcf", context_type="96", genome_build="GRCh38", cosmic_version=3.4)
+pip install SigProfilerAssignment
+pip install SigProfilerMatrixGenerator
+```
+Execute the following code in Python.
+```bash
+from SigProfilerMatrixGenerator import install as genInstall
+genInstall.install('GRCh38')
+from SigProfilerAssignment import Analyzer as Analyze
+Analyze.cosmic_fit(${path_to_vcf_directory}, ${path_to_output_directory}, input_type="vcf", context_type="96", genome_build="GRCh38", cosmic_version=3.4)
 ```
 
 ## Reference
