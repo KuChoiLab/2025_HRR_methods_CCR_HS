@@ -119,8 +119,15 @@ The following code is used to run scarHRD.
 ```bash
 # R environment
 # scarHRD version : 0.1.1
+## input_data example
+##     SampleID  Chromosome  Start_position  End_position  total_cn  A_cn  B_cn  ploidy
+##  SamplePatient1  chr1          14574          952448       5       0     5      3.7
+##  SamplePatient1  chr1         953394         1259701       3       0     3      3.7
 
+library(devtools)
+install_github('sztup/scarHRD',build_vignettes = TRUE)
 library(scarHRD)
+
 scores <- scarHRD::scar_score(input_data)
 ```
 
