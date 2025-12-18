@@ -95,8 +95,7 @@ gatk HaplotypeCaller \
    -R ${path_to_fasta_file} \
    -I ${path_to_normal_bam} \
    -O ${path_to_output_directory}/${sample_name}.g.vcf.gz \
-   -ERC GVCF \
-   -L ${path_to_bed_file}
+   -ERC GVCF
 ```
 
 ### 3. Detection of somatic CNVs
