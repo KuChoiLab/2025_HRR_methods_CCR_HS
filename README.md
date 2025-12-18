@@ -68,16 +68,17 @@ The following code is used to run Manta and Strelka2.
 ```bash
 # Manta version : 1.6.0
 # Sterlka2 version : 2.9.10
+# configManta.py and configureStrelkaSomaticWorkflow.py are available upon installation of Manta and Strelka.
 
 # Running Manta
-python2 ${path_to_Manta}/configManta.py \
+python2 manta/configManta.py \
 --normalBam ${path_to_normal_bam} \
 --tumorBam ${path_to_tumor_bam} \ 
 --referenceFasta ${path_to_fasta_file} \
 --runDir ${path_to_output_directory} \
 
 # Running Strelka2
-python2 ${path_to_Strelka}/configureStrelkaSomaticWorkflow.py \
+python2 strelka/configureStrelkaSomaticWorkflow.py \
 --normalBam ${path_to_normal_bam} \
 --tumorBam ${path_to_tumor_bam} \
 --ref ${path_to_fasta_file} \
