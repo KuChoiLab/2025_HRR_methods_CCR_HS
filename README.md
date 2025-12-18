@@ -109,6 +109,10 @@ Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${samp
 ## Calculating GIS using scarHRD
 The following code is used to generate scarHRD input file.
 ```bash
+# R environment
+# scarHRD version : 0.1.1
+
+library(scarHRD)
 scores <- scarHRD::scar_score(input_data)
 ```
 
