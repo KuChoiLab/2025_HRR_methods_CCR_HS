@@ -9,6 +9,7 @@ Samples that did not meet either of these criteria were classified as HR-profici
 
 ## Variant calling
 ### 1. Detection of somatic SNVs and INDELs
+Somatic SNVs were detected using GATK Mutect2, and somatic INDELs were identified based on the overlap between Mutect2 and Strelka2.
 
 The following code is used to run GATK Mutect2.
 
