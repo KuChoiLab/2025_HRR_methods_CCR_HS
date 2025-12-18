@@ -133,6 +133,7 @@ scores <- scarHRD::scar_score(input_data)
 
 ### 2. Identifying Mutational Signatures
 HR deficiency results in aberrant repair of DNA double-strand breaks, which is associated with the SBS3 mutational signature.
+
 The following code is used to run SigProfilerAssignment.
 ```bash
 # SigProfilerAssignment version : 0.1.9
