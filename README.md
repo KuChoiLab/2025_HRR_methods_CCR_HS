@@ -97,12 +97,15 @@ gatk HaplotypeCaller \
 
 The following code is used to run FACETS.
 ```bash
-${path to FACETS}/inst/extcode/snp-pileup \
+# FACETS version : 0.6.2
+# snp-pileup and cnv_facets.R are available upon installation of the FACETS.
+
+facets/inst/extcode/snp-pileup \
 ${path_to_output_directory}/${sample_pair_name}.csv.gz \
 ${path_to_normal_bam} \
 ${path_to_tumor_bam}
 
-Rscript ${path to FACETS}/bin/cnv_facets.R -p ${path_to_output_directory}/${sample_pair_name}.csv.gz -o "${path_to_output_directory}/${output_file}"
+Rscript facets/bin/cnv_facets.R -p ${path_to_output_directory}/${sample_pair_name}.csv.gz -o "${path_to_output_directory}/${output_file}"
 ```
 
 
