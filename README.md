@@ -12,6 +12,8 @@ Samples that did not meet either of these criteria were classified as HR-profici
 The following code is used to run GATK Mutect2.
 
 ```bash
+# GATK version : 4.6.0.0
+
 # Running GATK Mutect2
 gatk Mutect2 \
         -R ${path_to_fasta_file} \
